@@ -1,0 +1,63 @@
+/* Màu chủ đạo phụ trợ nếu cần */
+body {
+    background-color: #f8f9fa;
+}
+
+/* Hiệu ứng khi rê chuột vào các link trong Footer */
+.hover-warning {
+    transition: color 0.3s ease; /* Tạo hiệu ứng chuyển màu mượt mà */
+}
+
+.hover-warning:hover {
+    color: #ffc107 !important; /* Trùng với màu text-warning của Bootstrap */
+}
+
+
+/* Hiệu ứng Hover cho nút Thêm Giỏ Hàng trong thẻ Sản phẩm */
+.product-card .btn-warning {
+    transition: all 0.3s ease; /* Hiệu ứng mượt mà */
+    font-weight: 600; /* Làm chữ đậm lên một chút */
+}
+
+.product-card .btn-warning:hover {
+    background-color: #f0ba18 !important; /* Đổi sang màu cam (Orange) */
+    border-color: #f0ba18 !important;
+    color: white !important; /* Đổi chữ thành màu trắng cho nổi */
+    transform: translateY(-3px); /* Nẩy nút lên trên một chút */
+    box-shadow: 0 4px 10px rgba(253, 126, 20, 0.4); /* Tạo bóng đổ màu cam tỏa ra xung quanh */
+}
+
+
+/* ===== Phân trang (Pagination) ===== */
+
+/* Nút trang bình thường */
+.pagination .page-link {
+    color: #212529; /* Màu chữ đen */
+    border: 1px solid #dee2e6;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+/* Hover vào nút trang */
+.pagination .page-link:hover {
+    background-color: #ffc107; /* Màu vàng giống hệ thống */
+    border-color: #ffc107;
+    color: #212529;
+    transform: translateY(-2px); /* Nẩy nhẹ lên */
+    box-shadow: 0 3px 8px rgba(255, 193, 7, 0.4); /* Bóng đổ màu vàng */
+}
+
+/* Nút đang được chọn (Active) */
+.pagination .page-item.active .page-link {
+    background-color: #212529; /* Màu đen như Navbar */
+    border-color: #212529;
+    color: #ffc107; /* Chữ màu vàng trên nền đen */
+}
+
+/* Không cho nút Active bị hover mất màu */
+.pagination .page-item.active .page-link:hover {
+    background-color: #343a40;
+    border-color: #343a40;
+    transform: none;
+    box-shadow: none;
+}
