@@ -3,20 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Google Fonts: Italiana (tiêu đề) + Inter (nội dung) theo skillAI.md -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <!-- File CSS -->
     <link rel="stylesheet" href="css/style.css">
-    <title>ShopLite</title>
+    <title>Đăng ký - ShopLite</title>
 </head>
 <body class="d-flex flex-column min-vh-100">
-        <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-gallery sticky-top">
         <div class="container">
-            <!-- Logo -->
-            <a class="navbar-brand fw-bold fs-3 text-warning" href="index.html">
+            <!-- Logo — dùng font Italiana -->
+            <a class="navbar-brand" href="index.html">
                 <i class="bi bi-cart3"></i> ShopLite
             </a>
             
@@ -29,18 +34,18 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" href="index.html">Menu</a>
+                        <a class="nav-link" href="index.html">Menu</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="register.html">Login</a>
+                        <a class="nav-link active" href="register.html">Register</a>
                     </li>
                 </ul>
                 
                 <!-- Nút Giỏ hàng -->
                 <div class="d-flex ms-lg-3">
-                    <a href="cart.html" class="btn btn-outline-warning position-relative">
-                        <i class="bi bi-cart"></i> Cart
-                        <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    <a href="cart.html" class="btn-cart position-relative text-decoration-none">
+                        <i class="bi bi-bag"></i> Cart
+                        <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge">
                             0 
                         </span>
                     </a>
@@ -49,26 +54,157 @@
         </div>
     </nav>
 
-     <main>
-        <h1>Register</h1>
-     </main>
-
-
-        <!-- Footer -->
-    <footer class="bg-dark text-white text-center py-4 mt-auto">
+    <!-- Main Content -->
+    <main class="flex-grow-1 py-5 d-flex align-items-center">
         <div class="container">
-            <p class="mb-0">&copy; 2024 ShopLite. All rights reserved.</p>
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-5">
+                    
+                    <!-- Khung đăng ký (Form Card) -->
+                    <div class="p-5 bg-white border" style="border-radius: var(--rounded-md) !important;">
+                        
+                        <div class="text-center mb-5">
+                            <span class="label-caps">Registration</span>
+                            <h1 class="display-title mt-2" style="font-size: 2rem;">Tạo Tài Khoản</h1>
+                            <p class="text-muted mt-2" style="font-size: 0.85rem;">Nhập thông tin bên dưới để bắt đầu sử dụng dịch vụ của ShopLite.</p>
+                        </div>
+
+                        <!-- Form Đăng ký -->
+                        <form id="register-form" novalidate>
+                            
+                            <!-- Họ tên -->
+                            <div class="mb-4">
+                                <label for="register-fullname" class="label-caps mb-2" style="font-size: 0.65rem; color: var(--color-primary);">Họ và tên</label>
+                                <input type="text" class="form-control py-2" id="register-fullname" placeholder="Họ và tên của bạn" style="border-radius: var(--rounded-sm) !important;">
+                                <div class="text-danger mt-1" id="error-fullname" style="font-size: 0.75rem; display: none;"></div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="mb-4">
+                                <label for="register-email" class="label-caps mb-2" style="font-size: 0.65rem; color: var(--color-primary);">Email</label>
+                                <input type="email" class="form-control py-2" id="register-email" placeholder="example@domain.com" style="border-radius: var(--rounded-sm) !important;">
+                                <div class="text-danger mt-1" id="error-email" style="font-size: 0.75rem; display: none;"></div>
+                            </div>
+
+                            <!-- Mật khẩu -->
+                            <div class="mb-4">
+                                <label for="register-password" class="label-caps mb-2" style="font-size: 0.65rem; color: var(--color-primary);">Mật khẩu</label>
+                                <input type="password" class="form-control py-2" id="register-password" placeholder="Tối thiểu 6 ký tự" style="border-radius: var(--rounded-sm) !important;">
+                                <div class="text-danger mt-1" id="error-password" style="font-size: 0.75rem; display: none;"></div>
+                            </div>
+
+                            <!-- Số điện thoại -->
+                            <div class="mb-4">
+                                <label for="register-phone" class="label-caps mb-2" style="font-size: 0.65rem; color: var(--color-primary);">Số điện thoại</label>
+                                <input type="tel" class="form-control py-2" id="register-phone" placeholder="Ví dụ: 0912345678" style="border-radius: var(--rounded-sm) !important;">
+                                <div class="text-danger mt-1" id="error-phone" style="font-size: 0.75rem; display: none;"></div>
+                            </div>
+
+                            <!-- Vai trò (Select box) -->
+                            <div class="mb-4">
+                                <label for="register-role" class="label-caps mb-2" style="font-size: 0.65rem; color: var(--color-primary);">Bạn là ai?</label>
+                                <select class="form-select py-2" id="register-role" style="border-radius: var(--rounded-sm) !important;">
+                                    <option value="">Chọn vai trò của bạn</option>
+                                    <option value="customer">Khách hàng mua sắm</option>
+                                    <option value="partner">Đối tác / Nhà bán hàng</option>
+                                </select>
+                                <div class="text-danger mt-1" id="error-role" style="font-size: 0.75rem; display: none;"></div>
+                            </div>
+
+                            <!-- Checkbox điều khoản -->
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="register-terms" style="border-radius: var(--rounded-sm) !important;">
+                                    <label class="form-check-label text-muted" for="register-terms" style="font-size: 0.8rem; letter-spacing: 0.02em;">
+                                        Tôi đồng ý với các <a href="#" class="text-dark text-decoration-underline">Điều khoản dịch vụ</a> và <a href="#" class="text-dark text-decoration-underline">Chính sách bảo mật</a>.
+                                    </label>
+                                </div>
+                                <div class="text-danger mt-1" id="error-terms" style="font-size: 0.75rem; display: none;"></div>
+                            </div>
+
+                            <!-- Nút Submit -->
+                            <button type="submit" class="btn-gallery-primary py-3 w-100 mt-2">
+                                Đăng ký ngay
+                            </button>
+
+                        </form>
+
+                        <!-- Box thông báo thành công (Ẩn mặc định) -->
+                        <div id="register-success" class="text-center py-4 d-none">
+                            <i class="bi bi-check-circle text-dark" style="font-size: 3.5rem;"></i>
+                            <h4 class="display-title mt-3" style="font-size: 1.6rem;">Đăng Ký Thành Công!</h4>
+                            <p class="text-muted mt-2" style="font-size: 0.85rem;">Chào mừng bạn đã gia nhập hàng ngũ khách hàng cao cấp của ShopLite.</p>
+                            <a href="index.html" class="btn-gallery-primary mt-4 py-3 d-block w-100">Quay lại Trang Chủ mua sắm</a>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-gallery mt-auto">
+        <div class="container">
+            <div class="row mb-4">
+                
+                <!-- Cột 1: Logo và Thông tin doanh nghiệp -->
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <a class="footer-brand d-inline-block mb-3" href="index.html">
+                        <i class="bi bi-cart3"></i> ShopLite
+                    </a>
+                    <p class="footer-text">
+                        Nền tảng mua sắm trực tuyến Client-side số 1. Nhanh chóng, tiện lợi và hoàn toàn bảo mật.
+                    </p>
+                    <p class="footer-text mb-0">
+                        <i class="bi bi-geo-alt-fill me-2"></i>123 Đường ABC, Quận X, TP.HCM
+                    </p>
+                </div>
+
+                <!-- Cột 2: Các chính sách -->
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <h5 class="footer-heading">Chính sách</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="footer-link">Chính sách bảo mật</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link">Chính sách đổi trả</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link">Điều khoản dịch vụ</a></li>
+                        <li class="mb-2"><a href="#" class="footer-link">Hướng dẫn mua hàng</a></li>
+                    </ul>
+                </div>
+
+                <!-- Cột 3: Liên hệ và Mạng xã hội -->
+                <div class="col-md-4">
+                    <h5 class="footer-heading">Liên hệ</h5>
+                    <p class="footer-text mb-2">
+                        <i class="bi bi-envelope-fill me-2"></i>support@shoplite.com
+                    </p>
+                    <p class="footer-text mb-3">
+                        <i class="bi bi-telephone-fill me-2"></i>1900 1234
+                    </p>
+                    <div class="footer-social">
+                        <a href="#"><i class="bi bi-facebook"></i></a>
+                        <a href="#"><i class="bi bi-instagram"></i></a>
+                        <a href="#"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Đường kẻ ngang phân cách -->
+            <hr class="footer-divider">
+
+            <!-- Phần Copyright -->
+            <div class="text-center">
+                <p class="footer-copyright mb-0">&copy; 2026 ShopLite. All rights reserved.</p>
+            </div>
         </div>
     </footer>
-
-
-
-
-
 
     <!-- Bootstrap 5 Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- File JS -->
     <script src="js/main.js"></script>
+    <script src="js/register.js"></script>
 </body>
 </html>
