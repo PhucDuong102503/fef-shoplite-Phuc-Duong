@@ -1,74 +1,170 @@
-// URL của API cung cấp dữ liệu sản phẩm
-const API_URL = 'https://fakestoreapi.com/products';
+// ==================== FILE HOME.JS ====================
+// File này chứa logic riêng cho trang Home (index.html)
+// Nó sử dụng các hàm từ api.js và main.js
+// =====================================================
 
-// Khai báo các biến trạng thái cho tính năng Phân trang
-let allProducts = []; // Mảng chứa toàn bộ 20 sản phẩm lấy từ API
-let currentPage = 1;  // Trang hiện tại đang xem (mặc định là 1)
-const itemsPerPage = 8; // Số lượng sản phẩm muốn hiển thị trên 1 trang
+// Khai báo các biến trạng thái
+let allProducts = [];      // Mảng chứa toàn bộ sản phẩm lấy từ API
+let activeProducts = [];   // Mảng chứa danh sách sản phẩm sau khi lọc/sắp xếp
+let currentPage = 1;       // Trang hiện tại đang xem (mặc định là 1)
+const itemsPerPage = 8;    // Số lượng sản phẩm hiển thị trên 1 trang
 
-/** ==========================================gọi api============================================== */
+/** ========================================== GỌI API ============================================== */
 
-// Lắng nghe sự kiện: Chờ cho HTML load xong hết thì mới chạy hàm fetchProducts
+// Lắng nghe sự kiện khi tài liệu HTML tải xong
 document.addEventListener('DOMContentLoaded', () => {
     fetchProducts();
+    setupEventDelegation();
+    setupFilters();
 });
 
-
-// Hàm gọi API lấy sản phẩm (dùng async/await)
+// Hàm gọi API lấy sản phẩm
 async function fetchProducts() {
-    // Lấy các thẻ HTML cần thao tác
     const spinner = document.getElementById('loading-spinner');
 
     try {
-        const response = await fetch(API_URL);
-        if (!response.ok) throw new Error('Lỗi tải dữ liệu');
-        
-        // 1. Lưu TOÀN BỘ sản phẩm vào biến toàn cục allProducts
-        allProducts = await response.json(); 
+        // Gọi hàm fetchAllProducts() từ api.js
+        allProducts = await fetchAllProducts(); 
+        activeProducts = allProducts;
         
         spinner.classList.add('d-none');
         
-        // 2. Thay vì render tất cả, ta chỉ render Trang 1
+        // Render trang đầu tiên
         displayPage(currentPage); 
 
     } catch (error) {
         console.error(error);
-        spinner.innerHTML = '<p class="text-danger">Lỗi tải dữ liệu.</p>';
+        if (spinner) {
+            spinner.innerHTML = '<p class="text-danger py-4">Lỗi tải dữ liệu sản phẩm. Vui lòng F5 thử lại.</p>';
+        }
     }
 }
-/** ======================================================================================== */
 
-/** ==========================================phân trang=============================================== */
+/** ========================================== EVENT DELEGATION ===================================== */
+
+// Thiết lập lắng nghe sự kiện click bằng Event Delegation
+function setupEventDelegation() {
+    const productsContainer = document.getElementById('products-container');
+    if (productsContainer) {
+        productsContainer.addEventListener('click', (event) => {
+            const btn = event.target.closest('.btn-add-to-cart');
+            if (btn) {
+                const id = parseInt(btn.getAttribute('data-id'), 10);
+                const product = allProducts.find(p => p.id === id);
+                if (product) {
+                    addToCart(product);
+                }
+            }
+        });
+    }
+}
+
+/** ========================================== BỘ LỌC & SẮP XẾP ===================================== */
+
+// Thiết lập các bộ lắng nghe cho thanh công cụ lọc
+function setupFilters() {
+    const searchInput = document.getElementById('search-input');
+    const filterCategory = document.getElementById('filter-category');
+    const sortProducts = document.getElementById('sort-products');
+
+    if (searchInput) {
+        // Áp dụng kỹ thuật Debounce 300ms khi người dùng nhập từ khóa tìm kiếm
+        searchInput.addEventListener('input', debounce(() => {
+            applyFiltersAndSort();
+        }, 300));
+    }
+
+    if (filterCategory) {
+        filterCategory.addEventListener('change', () => {
+            applyFiltersAndSort();
+        });
+    }
+
+    if (sortProducts) {
+        sortProducts.addEventListener('change', () => {
+            applyFiltersAndSort();
+        });
+    }
+}
+
+// Hàm kết hợp Lọc (Category) + Tìm kiếm (Search) + Sắp xếp (Sort) cùng lúc
+function applyFiltersAndSort() {
+    const searchKeyword = document.getElementById('search-input').value.toLowerCase().trim();
+    const selectedCategory = document.getElementById('filter-category').value;
+    const sortValue = document.getElementById('sort-products').value;
+
+    let result = allProducts;
+
+    // 1. Lọc theo danh mục
+    if (selectedCategory) {
+        result = result.filter(product => product.category === selectedCategory);
+    }
+
+    // 2. Lọc theo từ khóa tìm kiếm
+    if (searchKeyword) {
+        result = result.filter(product => product.title.toLowerCase().includes(searchKeyword));
+    }
+
+    // 3. Sắp xếp (Sort)
+    if (sortValue === 'price-asc') {
+        result = [...result].sort((a, b) => a.price - b.price);
+    } else if (sortValue === 'price-desc') {
+        result = [...result].sort((a, b) => b.price - a.price);
+    } else if (sortValue === 'title-asc') {
+        result = [...result].sort((a, b) => a.title.localeCompare(b.title)); 
+    } else if (sortValue === 'title-desc') {
+        result = [...result].sort((a, b) => b.title.localeCompare(a.title));
+    }
+
+    // Reset trang hiện tại về trang 1
+    currentPage = 1;
+    activeProducts = result;
+
+    displayPage(currentPage);
+}
+
+// Kỹ thuật Debounce giúp hoãn việc chạy hàm để tăng hiệu năng khi gõ phím
+function debounce(func, delay) {
+    let timeoutId;
+    return function (...args) {
+        if (timeoutId) clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            func.apply(this, args);
+        }, delay);
+    };
+}
+
+/** ========================================== PHÂN TRANG =========================================== */
+
 // Hàm hiển thị sản phẩm của một trang cụ thể
 function displayPage(page) {
-    // 1. Tính toán vị trí cắt mảng (Logic cốt lõi của phân trang)
     const startIndex = (page - 1) * itemsPerPage; 
     const endIndex = startIndex + itemsPerPage;
     
-    // Ví dụ: Trang 1 => (1-1)*9 = 0. Cắt từ index 0 đến 9.
-    // Trang 2 => (2-1)*9 = 9. Cắt từ index 9 đến 18.
+    // Cắt mảng activeProducts để lấy số lượng sản phẩm trang hiện tại
+    const productsToDisplay = activeProducts.slice(startIndex, endIndex);
     
-    // 2. Dùng hàm slice() của mảng để cắt lấy đúng số lượng cần thiết
-    const productsToDisplay = allProducts.slice(startIndex, endIndex);
-    
-    // 3. Gọi hàm renderProducts (hàm đã có) để vẽ ra giao diện
+    // Gọi hàm render ra giao diện
     renderProducts(productsToDisplay);
     
-    // 4. Vẽ lại các nút phân trang cho đúng trạng thái đang click
+    // Vẽ các nút phân trang tương ứng
     renderPagination();
 }
 
 // Hàm vẽ các nút phân trang
 function renderPagination() {
     const paginationContainer = document.getElementById('pagination-container');
-    paginationContainer.innerHTML = ''; // Xóa rỗng trước khi vẽ
-    
-    // Tính tổng số trang (Ví dụ: 20 sản phẩm / 9 = 2.2 => làm tròn lên là 3 trang)
-    const totalPages = Math.ceil(allProducts.length / itemsPerPage);
+    if (!paginationContainer) return;
 
-    // Tạo vòng lặp để vẽ ra số nút bằng với tổng số trang
+    paginationContainer.innerHTML = ''; // Xóa rỗng trước khi vẽ
+
+    // Tính tổng số trang dựa trên activeProducts
+    const totalPages = Math.ceil(activeProducts.length / itemsPerPage);
+
+    // Nếu không có sản phẩm hoặc chỉ có 1 trang thì không cần vẽ nút phân trang
+    if (totalPages <= 1) return;
+
     for (let i = 1; i <= totalPages; i++) {
-        // Nếu trang i trùng với trang hiện tại thì đổi màu thành xanh (class active)
         const activeClass = (i === currentPage) ? 'active' : '';
         
         const liHtml = `
@@ -80,51 +176,58 @@ function renderPagination() {
     }
 }
 
-// Hàm xử lý sự kiện khi người dùng click vào nút trang
+// Hàm xử lý sự kiện khi click chọn trang
 function changePage(page) {
-    currentPage = page; // Cập nhật lại trang hiện tại
-    displayPage(currentPage); // Gọi lại hàm hiển thị trang mới
+    currentPage = page;
+    displayPage(currentPage);
     
-    // Cuộn màn hình lên đầu danh sách sản phẩm cho mượt
-    document.getElementById('products-section').scrollIntoView({ behavior: 'smooth' });
+    // Cuộn màn hình lên đầu danh sách sản phẩm mượt mà
+    const productsSection = document.getElementById('products-section');
+    if (productsSection) {
+        productsSection.scrollIntoView({ behavior: 'smooth' });
+    }
 }
 
-/** ==========================================Kết thúc phân trang=============================================== */
+/** ========================================== RENDER GIAO DIỆN ===================================== */
 
-/** ==========================================Render giao diện============================================== */
-// Hàm render (hiển thị) sản phẩm ra giao diện
+// Hàm render sản phẩm ra giao diện
 function renderProducts(products) {
     const productsContainer = document.getElementById('products-container');
-    
-    // Xóa rỗng container trước khi đổ dữ liệu vào (phòng trường hợp gọi lại)
+    if (!productsContainer) return;
+
     productsContainer.innerHTML = '';
 
-    // Vòng lặp: Đi qua từng sản phẩm trong mảng
+    // Nếu không có sản phẩm nào sau khi lọc
+    if (products.length === 0) {
+        productsContainer.innerHTML = `
+            <div class="col-12 text-center py-5">
+                <i class="bi bi-search text-muted" style="font-size: 2.5rem;"></i>
+                <p class="text-muted mt-3" style="font-size: 0.95rem; letter-spacing: 0.05em;">Không tìm thấy sản phẩm phù hợp.</p>
+            </div>
+        `;
+        return;
+    }
+
     products.forEach(product => {
-        // Tạo một chuỗi HTML đại diện cho 1 Card sản phẩm
         const productCard = `
             <div class="col-sm-6 col-md-4 col-lg-3">
-                <div class="card h-100 shadow-sm product-card">
-                    <img src="${product.image}" class="card-img-top p-3" alt="${product.title}" style="height: 200px; object-fit: contain;">
-                    <div class="card-body d-flex flex-column">
-                        <h6 class="card-title text-truncate" title="${product.title}">${product.title}</h6>
-                        <p class="card-text text-muted small">${product.category}</p>
-                        <h5 class="text-danger fw-bold mt-auto">$${product.price}</h5>
+                <div class="card h-100 product-card">
+                    <img src="${product.image}" class="card-img-top p-4" alt="${product.title}" style="height: 220px; object-fit: contain;">
+                    <div class="card-body d-flex flex-column p-4">
+                        <p class="card-category mb-2">${product.category}</p>
+                        <h6 class="card-title text-truncate mb-2" title="${product.title}">${product.title}</h6>
+                        <p class="card-price mt-auto mb-3">$${product.price}</p>
                         
-                        <div class="mt-3">
-                            <a href="product.html?id=${product.id}" class="btn btn-outline-dark btn-sm w-100 mb-2">Xem chi tiết</a>
-                            <button class="btn btn-warning btn-sm w-100">
-                                <i class="bi bi-cart-plus"></i> Thêm Giỏ Hàng
+                        <div>
+                            <a href="product.html?id=${product.id}" class="btn-gallery-outline mb-2">Xem chi tiết</a>
+                            <button class="btn-gallery-primary btn-add-to-cart" data-id="${product.id}">
+                                <i class="bi bi-bag-plus"></i> Thêm Giỏ Hàng
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
         `;
-        
-        // Chèn chuỗi HTML này vào trong Container
         productsContainer.insertAdjacentHTML('beforeend', productCard);
     });
 }
-/** ======================================================================================== */
-

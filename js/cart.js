@@ -18,7 +18,7 @@ function renderCart() {
     
     const emptyState = document.getElementById('cart-empty-state');
     const cartContent = document.getElementById('cart-content');
-    const itemsContainer = document.getElementById('cart-items-container');
+    const itemsContainer = document.getElementById('cart-items-container'); 
 
     // Nếu giỏ hàng trống, hiển thị màn hình trống
     if (cart.length === 0) {

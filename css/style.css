@@ -1,63 +1,353 @@
-/* Màu chủ đạo phụ trợ nếu cần */
+/* =====================================================
+   GALLERY AVANT - Design System (skillAI.md)
+   Phong cách: White-cube, tối giản, đơn sắc
+   ===================================================== */
+
+/* ===== 1. CSS Custom Properties (Biến CSS) =====
+   Khai báo tất cả màu, font, spacing ở 1 chỗ duy nhất.
+   Khi cần đổi theme, chỉ cần sửa ở đây. */
+:root {
+    /* Màu sắc từ skillAI.md */
+    --color-primary: #0A0A0A;     /* Headlines, core text */
+    --color-secondary: #7A7A7A;   /* Borders, captions, metadata */
+    --color-tertiary: #3A3A3A;    /* Nút bấm chính — duy nhất 1 accent */
+    --color-neutral: #F8F8F7;     /* Nền trang */
+    --color-surface: #FFFFFF;     /* Nền card, nền navbar */
+    --color-on-primary: #FFFFFF;  /* Chữ trên nền tối */
+
+    /* Bo góc — tất cả 0px (góc vuông, không bo tròn) */
+    --rounded-sm: 0px;
+    --rounded-md: 0px;
+    --rounded-lg: 0px;
+
+    /* Khoảng cách */
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 32px;
+}
+
+/* ===== 2. Nền trang & Typography ===== */
 body {
-    background-color: #f8f9fa;
+    background-color: var(--color-neutral);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.92rem;
+    line-height: 1.7;
+    color: var(--color-primary);
 }
 
-/* Hiệu ứng khi rê chuột vào các link trong Footer */
-.hover-warning {
-    transition: color 0.3s ease; /* Tạo hiệu ứng chuyển màu mượt mà */
+/* Tiêu đề chính dùng font Italiana (trang trọng, gallery) */
+.display-title {
+    font-family: 'Italiana', serif;
+    font-size: 2.8rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    color: var(--color-primary);
 }
 
-.hover-warning:hover {
-    color: #ffc107 !important; /* Trùng với màu text-warning của Bootstrap */
-}
-
-
-/* Hiệu ứng Hover cho nút Thêm Giỏ Hàng trong thẻ Sản phẩm */
-.product-card .btn-warning {
-    transition: all 0.3s ease; /* Hiệu ứng mượt mà */
-    font-weight: 600; /* Làm chữ đậm lên một chút */
-}
-
-.product-card .btn-warning:hover {
-    background-color: #f0ba18 !important; /* Đổi sang màu cam (Orange) */
-    border-color: #f0ba18 !important;
-    color: white !important; /* Đổi chữ thành màu trắng cho nổi */
-    transform: translateY(-3px); /* Nẩy nút lên trên một chút */
-    box-shadow: 0 4px 10px rgba(253, 126, 20, 0.4); /* Tạo bóng đổ màu cam tỏa ra xung quanh */
-}
-
-
-/* ===== Phân trang (Pagination) ===== */
-
-/* Nút trang bình thường */
-.pagination .page-link {
-    color: #212529; /* Màu chữ đen */
-    border: 1px solid #dee2e6;
-    transition: all 0.3s ease;
+/* Label kiểu all-caps, nhỏ, cách chữ rộng */
+.label-caps {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.68rem;
     font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-secondary);
 }
 
-/* Hover vào nút trang */
+/* ===== 3. Ghi đè Bootstrap — Loại bỏ bo tròn ===== */
+.card,
+.btn,
+.form-control,
+.navbar,
+.pagination .page-link,
+.badge {
+    border-radius: var(--rounded-md) !important;
+}
+
+/* ===== 4. Navbar ===== */
+.navbar-gallery {
+    background-color: var(--color-surface);
+    border-bottom: 1px solid #E5E5E5;
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+.navbar-gallery .navbar-brand {
+    font-family: 'Italiana', serif;
+    font-size: 1.6rem;
+    font-weight: 400;
+    color: var(--color-primary);
+    letter-spacing: 0.02em;
+}
+
+.navbar-gallery .navbar-brand:hover {
+    color: var(--color-primary);
+}
+
+.navbar-gallery .nav-link {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-secondary);
+    transition: color 0.3s ease;
+    padding: 8px 16px;
+}
+
+.navbar-gallery .nav-link:hover,
+.navbar-gallery .nav-link.active {
+    color: var(--color-primary);
+}
+
+/* Nút Cart trên Navbar */
+.btn-cart {
+    background-color: transparent;
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    transition: all 0.3s ease;
+}
+
+.btn-cart:hover {
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+}
+
+.btn-cart .badge {
+    background-color: var(--color-tertiary) !important;
+    font-size: 0.6rem;
+}
+
+/* ===== 5. Hero / Banner ===== */
+.hero-section {
+    background-color: var(--color-surface);
+    border-bottom: 1px solid #E5E5E5;
+    padding: 80px 0;
+}
+
+.hero-section p {
+    color: var(--color-secondary);
+    font-size: 0.92rem;
+    max-width: 500px;
+    margin: 16px auto 0;
+}
+
+/* ===== 6. Product Card ===== */
+.product-card {
+    background-color: var(--color-surface);
+    border: 1px solid #E5E5E5;
+    border-radius: var(--rounded-lg) !important;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.product-card:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 8px 30px rgba(10, 10, 10, 0.08);
+    transform: translateY(-4px);
+}
+
+.product-card .card-img-top {
+    background-color: var(--color-neutral);
+}
+
+.product-card .card-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-primary);
+}
+
+.product-card .card-category {
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-secondary);
+}
+
+.product-card .card-price {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+/* Nút chính (Thêm Giỏ Hàng) — dùng Tertiary */
+.btn-gallery-primary {
+    background-color: var(--color-tertiary);
+    color: var(--color-on-primary);
+    border: none;
+    padding: 10px 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.btn-gallery-primary:hover {
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(10, 10, 10, 0.15);
+}
+
+/* Nút phụ (Xem chi tiết) — viền mỏng */
+.btn-gallery-outline {
+    background-color: transparent;
+    color: var(--color-secondary);
+    border: 1px solid #E5E5E5;
+    padding: 10px 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.20em;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    width: 100%;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-gallery-outline:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+/* ===== 7. Pagination ===== */
+.pagination .page-link {
+    color: var(--color-secondary);
+    border: 1px solid #E5E5E5;
+    background-color: var(--color-surface);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 10px 16px;
+    transition: all 0.3s ease;
+}
+
 .pagination .page-link:hover {
-    background-color: #ffc107; /* Màu vàng giống hệ thống */
-    border-color: #ffc107;
-    color: #212529;
-    transform: translateY(-2px); /* Nẩy nhẹ lên */
-    box-shadow: 0 3px 8px rgba(255, 193, 7, 0.4); /* Bóng đổ màu vàng */
+    background-color: var(--color-neutral);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
 }
 
-/* Nút đang được chọn (Active) */
 .pagination .page-item.active .page-link {
-    background-color: #212529; /* Màu đen như Navbar */
-    border-color: #212529;
-    color: #ffc107; /* Chữ màu vàng trên nền đen */
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-on-primary);
 }
 
-/* Không cho nút Active bị hover mất màu */
 .pagination .page-item.active .page-link:hover {
-    background-color: #343a40;
-    border-color: #343a40;
+    background-color: var(--color-tertiary);
+    border-color: var(--color-tertiary);
     transform: none;
     box-shadow: none;
+}
+
+/* ===== 8. Section Heading ===== */
+.section-heading {
+    font-family: 'Italiana', serif;
+    font-size: 1.8rem;
+    font-weight: 400;
+    color: var(--color-primary);
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.section-label {
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-secondary);
+    text-align: center;
+    display: block;
+    margin-bottom: 12px;
+}
+
+/* ===== 9. Footer ===== */
+.footer-gallery {
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+    padding: 60px 0 24px;
+}
+
+.footer-gallery .footer-brand {
+    font-family: 'Italiana', serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--color-on-primary);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+}
+
+.footer-gallery .footer-heading {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 20px;
+}
+
+.footer-gallery .footer-text {
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 0.85rem;
+}
+
+.footer-gallery .footer-link {
+    color: rgba(255, 255, 255, 0.45);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.3s ease;
+}
+
+.footer-gallery .footer-link:hover {
+    color: var(--color-on-primary);
+}
+
+.footer-gallery .footer-social a {
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+    margin-right: 16px;
+}
+
+.footer-gallery .footer-social a:hover {
+    color: var(--color-on-primary);
+}
+
+.footer-gallery .footer-divider {
+    border-color: rgba(255, 255, 255, 0.1);
+    margin: 32px 0 20px;
+}
+
+.footer-gallery .footer-copyright {
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+}
+
+/* ===== 10. Loading Spinner ===== */
+.spinner-border {
+    color: var(--color-tertiary) !important;
+}
+
+.loading-text {
+    color: var(--color-secondary);
+    font-size: 0.75rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
 }
